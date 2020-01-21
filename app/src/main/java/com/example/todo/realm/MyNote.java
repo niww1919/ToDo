@@ -7,6 +7,7 @@ public class MyNote extends RealmObject {
     @Required
 //    private int id;
     private String myNote;
+//    private String mySubNote;
 
     public String getMyNote() {
         return myNote;
@@ -15,5 +16,6 @@ public class MyNote extends RealmObject {
     public void setMyNote(String myNote) {
         this.myNote = myNote;
     }
+
 
 }
