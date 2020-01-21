@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         noteAdapter = new NoteAdapter(realm);
         recyclerView.setAdapter(noteAdapter);
+
         findViewById(R.id.buttonToAddNote).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

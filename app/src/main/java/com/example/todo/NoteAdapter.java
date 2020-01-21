@@ -18,6 +18,7 @@ import io.realm.RealmResults;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
     private Realm realm;
+    private RealmResults<MyNote> result;
 
     public NoteAdapter(Realm realm) {
         this.realm = realm;
@@ -34,9 +35,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull NoteAdapter.MyViewHolder holder, int position) {
 
 
-        RealmResults<MyNote> result = realm.where(MyNote.class).findAll();
+        result = realm.where(MyNote.class).findAll();
 
-        for (int i = 0; i < position; i++) {
+        for (int i = 0; i <= position; i++) {
 
         holder.tvNote.setText(i+" "+ result.get(i).getMyNote());
         }
@@ -57,6 +58,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNote = itemView.findViewById(R.id.tvForItem);
+            tvNote.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    tvNote.setVisibility(View.INVISIBLE);
+
+                    return false;
+                }
+            });
 
         }
 
