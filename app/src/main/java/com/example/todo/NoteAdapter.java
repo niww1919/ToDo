@@ -39,7 +39,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
         for (int i = 0; i <= position; i++) {
 
-        holder.tvNote.setText(i+" "+ result.get(i).getMyNote());
+            holder.tvNote.setText(result.get(i).getNameNote());
+            for (int j = 0; j < result.get(i).getMyNoteRealmList().size(); j++) {
+                holder.tvList.setText(" - " +j +" " + result.get(i).getMyNoteRealmList().get(j));
+
+            }
+//        holder.tvList.setText(" - "+ result.asJSON());
+
+
         }
 //        holder.tvNote.setText("Test");
         Log.i("holder", realm.where(MyNote.class).findAll().asJSON());
@@ -52,12 +59,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         return (int) realm.where(MyNote.class).count();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvNote;
+        TextView tvList;
+        TextView newTV;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNote = itemView.findViewById(R.id.tvForItem);
+            tvList = itemView.findViewById(R.id.tvForList);
             tvNote.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {

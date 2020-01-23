@@ -15,13 +15,18 @@ import android.widget.TextView;
 
 import com.example.todo.realm.MyNote;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 
 public class MainActivity extends AppCompatActivity {
     Realm realm;
     RecyclerView.LayoutManager layoutManager;
     NoteAdapter noteAdapter;
+    List<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +48,22 @@ public class MainActivity extends AppCompatActivity {
         noteAdapter = new NoteAdapter(realm);
         recyclerView.setAdapter(noteAdapter);
 
+        list = new ArrayList<>();
+
         findViewById(R.id.buttonToAddNote).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 realm.beginTransaction();
+                //fixme RealmList https://realm.io/docs/java/latest/#other-libraries
+
                 MyNote myNote1 = realm.createObject(MyNote.class);
-//                myNote1.setId(1);
-                myNote1.setMyNote(((TextView)findViewById(R.id.editTextForNote)).getText().toString());
+                RealmList<String> realmList = new RealmList<>();
+                realmList.add(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
+                realmList.add(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
+                realmList.add(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
+                myNote1.setMyNoteRealmList(realmList);
+
+                myNote1.setNameNote(((TextView)findViewById(R.id.editTextForNote)).getText().toString());
                 realm.commitTransaction();
                 ((TextView) findViewById(R.id.editTextForNote)).setText("");
                 Log.i("realm", realm.where(MyNote.class).findAll().asJSON());

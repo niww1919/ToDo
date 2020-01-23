@@ -1,21 +1,30 @@
 package com.example.todo.realm;
 
+import java.util.List;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Required;
 
 public class MyNote extends RealmObject {
     @Required
 //    private int id;
-    private String myNote;
-//    private String mySubNote;
+    private RealmList<String> myNoteRealmList;
+    private String nameNote;
 
-    public String getMyNote() {
-        return myNote;
+    public RealmList<String> getMyNoteRealmList() {
+        return myNoteRealmList;
     }
 
-    public void setMyNote(String myNote) {
-        this.myNote = myNote;
+    public void setMyNoteRealmList(RealmList<String> myNoteRealmList) {
+        this.myNoteRealmList = myNoteRealmList;
     }
 
+    public String getNameNote() {
+        return nameNote;
+    }
 
+    public void setNameNote(String nameNote) {
+        this.nameNote = nameNote;
+    }
 }
