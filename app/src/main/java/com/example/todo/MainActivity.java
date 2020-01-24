@@ -63,12 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                if (direction != ItemTouchHelper.LEFT) {
-//
-//                    viewHolder.itemView.setVisibility(View.INVISIBLE);
-//                }
-//                else {
-//                }
 
                     Toast.makeText(getBaseContext(),"Ok",Toast.LENGTH_SHORT).show();
 
