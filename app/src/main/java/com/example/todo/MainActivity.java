@@ -3,15 +3,21 @@
 
 package com.example.todo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.todo.realm.MyNote;
 
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     NoteAdapter noteAdapter;
     List<String> list;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,29 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         noteAdapter = new NoteAdapter(realm);
         recyclerView.setAdapter(noteAdapter);
+
+        ItemTouchHelper itemTouchHelper  = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//                if (direction != ItemTouchHelper.LEFT) {
+//
+//                    viewHolder.itemView.setVisibility(View.INVISIBLE);
+//                }
+//                else {
+//                }
+
+                    Toast.makeText(getBaseContext(),"Ok",Toast.LENGTH_SHORT).show();
+
+
+
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         list = new ArrayList<>();
 
