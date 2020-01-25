@@ -48,10 +48,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
         for (int i = 0; i <= position; i++) {
             holder.tvNote.setText(" - " + i + " " + realmResults.get(i).getMyNote());
-            for (int j = 0; j < realmResults.get(i).getMyNoteRealmList().size(); j++) {
-
-                holder.tvNote.setText(" - " + i + " " + realmResults.get(i).getMyNoteRealmList().get(j));
-            }
+//            for (int j = 0; j < realmResults.get(i).getMyNoteRealmList().size(); j++) {
+//
+//                holder.tvNote.setText(" - " + j + " " + realmResults.get(i).getMyNoteRealmList().get(j));
+//            }
         }
         Log.i("holder", realm.where(MyNote.class).findAll().asJSON());
 

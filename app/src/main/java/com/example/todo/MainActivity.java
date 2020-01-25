@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -76,28 +77,30 @@ public class MainActivity extends AppCompatActivity {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        myNote = realm.createObject(MyNote.class);
+//                        myNote = realm.createObject(MyNote.class);
                         RealmResults<MyNote> realmResults = realm.where(MyNote.class).findAll();//fixme
-//                            realmResults.get(viewHolder.getAdapterPosition()).setMyNote("1");
+                        Log.i("realmResults", realmResults.asJSON() + "");
+
                         if (direction == ItemTouchHelper.LEFT) {
-
                             realmResults.get(viewHolder.getAdapterPosition()).deleteFromRealm();
-                        } else {
+                        }
+                        if (direction == ItemTouchHelper.RIGHT) {
+//                            RealmList<String> realmResults1 = realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList();//fixme
+//
+//                            if (realmResults1 == null) {
+//                                realmResults1 = new RealmList<>();
+//                            }
+//                            realmResults1.add("realmResults1");
+//
+//                            Log.i("realmResults1", realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList().size()+ "");
+//
+//                            realmResults.get(viewHolder.getAdapterPosition()).setMyNoteRealmList(realmResults1);
+//
+////                            myNote.setMyNoteRealmList(realmResults1);
+//                            Log.i("realmResults1", realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList().size()+"");
 
-                            RealmList<String> realmResults1 = realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList();//fixme
-                            if (realmResults1 == null) {
-                                realmResults1 = new RealmList<>();
-                            }
-                            realmResults1.add("realmResults1");
 
-                            Log.i("getMyNoteRealmList", realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList().size()+ "");
-
-                            realmResults.get(viewHolder.getAdapterPosition()).setMyNoteRealmList(realmResults1);
-                            myNote.setMyNoteRealmList(realmResults1);
-                            Log.i("myNote", + myNote.getMyNoteRealmList().size()+"");
-
-
-//                            showPopupMenu();
+                            showPopupMenu(realmResults);
                         }
 //                            Log.i("realmResults", realmResults.get(viewHolder.getAdapterPosition()).getMyNote() +" "+ viewHolder.getAdapterPosition());
 
@@ -131,11 +134,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showPopupMenu() {
+    private void showPopupMenu(final RealmResults<MyNote> results1) {
         LayoutInflater inflater = LayoutInflater.from(getBaseContext());
-        View addNote = inflater.inflate(R.layout.add_note, null);
+        final View addNote = inflater.inflate(R.layout.add_note, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(addNote);
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        myNote = realm.createObject(MyNote.class);
+                        myNote.setMyNote(((TextView) addNote.findViewById(R.id.editTextForNoteBySwipe)).getText().toString());
+//                        myNote.setMyNote("Work");
+
+
+//                        results1.add(((TextView) findViewById(R.layout.add_note)).getText().toString());
+//                        results1.setMyNote(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
+                    }
+                });
+
+                recreate();
+            }
+        });
+
         builder.show();
 
     }
