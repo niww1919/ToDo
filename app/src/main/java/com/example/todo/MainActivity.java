@@ -65,15 +65,19 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, final int direction) {
 
                     Toast.makeText(getBaseContext(),"Ok",Toast.LENGTH_SHORT).show();
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
                             RealmResults<MyNote> realmResults = realm.where(MyNote.class).findAll();//fixme
-                            realmResults.get(viewHolder.getAdapterPosition()).setMyNote("1");
-                            Log.i("realmResults", realmResults.get(viewHolder.getAdapterPosition()).getMyNote() +" "+ viewHolder.getAdapterPosition());
+//                            realmResults.get(viewHolder.getAdapterPosition()).setMyNote("1");
+                            if (direction == ItemTouchHelper.LEFT) {
+
+                            realmResults.get(viewHolder.getAdapterPosition()).deleteFromRealm();
+                            }
+//                            Log.i("realmResults", realmResults.get(viewHolder.getAdapterPosition()).getMyNote() +" "+ viewHolder.getAdapterPosition());
 
 
                         }
