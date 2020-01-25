@@ -10,7 +10,8 @@ public class MyNote extends RealmObject {
     @Required
 //    private int id;
     private String myNote;
-    private String mySubNote;
+    private RealmList<String> myNoteRealmList;
+
 
     public String getMyNote() {
         return myNote;
@@ -20,12 +21,11 @@ public class MyNote extends RealmObject {
         this.myNote = myNote;
     }
 
-    public String getMySubNote() {
-        return mySubNote;
+    public RealmList<String> getMyNoteRealmList() {
+        return myNoteRealmList;
     }
 
-    public void setMySubNote(String mySubNote) {
-        this.mySubNote = mySubNote;
+    public void setMyNoteRealmList(RealmList<String> myNoteRealmList) {
+        this.myNoteRealmList = myNoteRealmList;
     }
-
 }

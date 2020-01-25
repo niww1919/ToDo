@@ -4,6 +4,7 @@
 package com.example.todo;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -14,8 +15,11 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +27,7 @@ import com.example.todo.realm.MyNote;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         noteAdapter = new NoteAdapter(realm);
         recyclerView.setAdapter(noteAdapter);
 
-        ItemTouchHelper itemTouchHelper  = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT) {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -67,22 +72,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, final int direction) {
 
-                    Toast.makeText(getBaseContext(),"Ok",Toast.LENGTH_SHORT).show();
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            RealmResults<MyNote> realmResults = realm.where(MyNote.class).findAll();//fixme
+                Toast.makeText(getBaseContext(), "Ok", Toast.LENGTH_SHORT).show();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        RealmResults<MyNote> realmResults = realm.where(MyNote.class).findAll();//fixme
 //                            realmResults.get(viewHolder.getAdapterPosition()).setMyNote("1");
-                            if (direction == ItemTouchHelper.LEFT) {
+                        if (direction == ItemTouchHelper.LEFT) {
 
                             realmResults.get(viewHolder.getAdapterPosition()).deleteFromRealm();
-                            }
+                        } else {
+                            RealmList<String> realmResults1 = new RealmList<>();//fixme
+                            realmResults1.add("Test");
+                            realmResults.get(viewHolder.getAdapterPosition()).setMyNoteRealmList(realmResults1);
+
+                            showPopupMenu();
+                        }
 //                            Log.i("realmResults", realmResults.get(viewHolder.getAdapterPosition()).getMyNote() +" "+ viewHolder.getAdapterPosition());
 
 
-                        }
-                    });
-
+                    }
+                });
 
 
             }
@@ -107,5 +117,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
+
+    private void showPopupMenu() {
+        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
+        View addNote = inflater.inflate(R.layout.add_note, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(addNote);
+        builder.show();
+
+    }
+
 }
