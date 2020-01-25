@@ -76,17 +76,28 @@ public class MainActivity extends AppCompatActivity {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
+                        myNote = realm.createObject(MyNote.class);
                         RealmResults<MyNote> realmResults = realm.where(MyNote.class).findAll();//fixme
 //                            realmResults.get(viewHolder.getAdapterPosition()).setMyNote("1");
                         if (direction == ItemTouchHelper.LEFT) {
 
                             realmResults.get(viewHolder.getAdapterPosition()).deleteFromRealm();
                         } else {
-                            RealmList<String> realmResults1 = new RealmList<>();//fixme
-                            realmResults1.add("Test");
-                            realmResults.get(viewHolder.getAdapterPosition()).setMyNoteRealmList(realmResults1);
 
-                            showPopupMenu();
+                            RealmList<String> realmResults1 = realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList();//fixme
+                            if (realmResults1 == null) {
+                                realmResults1 = new RealmList<>();
+                            }
+                            realmResults1.add("realmResults1");
+
+                            Log.i("getMyNoteRealmList", realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList().size()+ "");
+
+                            realmResults.get(viewHolder.getAdapterPosition()).setMyNoteRealmList(realmResults1);
+                            myNote.setMyNoteRealmList(realmResults1);
+                            Log.i("myNote", + myNote.getMyNoteRealmList().size()+"");
+
+
+//                            showPopupMenu();
                         }
 //                            Log.i("realmResults", realmResults.get(viewHolder.getAdapterPosition()).getMyNote() +" "+ viewHolder.getAdapterPosition());
 
