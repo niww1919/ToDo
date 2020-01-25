@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("realmResults", realmResults.asJSON() + "");
 
                         if (direction == ItemTouchHelper.LEFT) {
-                            realmResults.get(viewHolder.getAdapterPosition()).deleteFromRealm();
+                            showPopupMenuOnDelete(realmResults, viewHolder.getAdapterPosition());
                         }
                         if (direction == ItemTouchHelper.RIGHT) {
 //                            RealmList<String> realmResults1 = realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList();//fixme
@@ -144,6 +144,35 @@ public class MainActivity extends AppCompatActivity {
 
 //                        results1.add(((TextView) findViewById(R.layout.add_note)).getText().toString());
 //                        results1.setMyNote(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
+                    }
+                });
+
+                recreate();
+            }
+        });
+
+        builder.show();
+
+    }
+    private void showPopupMenuOnDelete(final RealmResults<MyNote> realmResults, final int position) {
+        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
+        final View addNote = inflater.inflate(R.layout.delete_note, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        ((TextView)addNote.findViewById(R.id.tvToDelNote)).setText("Do you want to del :"+ realmResults.get(position).getMyNote());
+//        addNote.findViewById(R.id.editTextForNoteBySwipe).isFocused();
+        // https://stackoverflow.com/questions/2004344/how-do-i-handle-imeoptions-done-button-click
+        builder.setView(addNote);
+//        showSoftKeyboard(addNote);
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+
+                        realmResults.get(position).deleteFromRealm();
+
                     }
                 });
 
