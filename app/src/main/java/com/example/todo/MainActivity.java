@@ -18,7 +18,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 //                            Log.i("realmResults1", realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList().size()+"");
 
 
-                            showPopupMenu(realmResults);
+                            showPopupMenu();
                         }
 //                            Log.i("realmResults", realmResults.get(viewHolder.getAdapterPosition()).getMyNote() +" "+ viewHolder.getAdapterPosition());
 
@@ -117,26 +119,10 @@ public class MainActivity extends AppCompatActivity {
 
         list = new ArrayList<>();
 
-        findViewById(R.id.buttonToAddNote).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                realm.beginTransaction();
-                //fixme RealmList https://realm.io/docs/java/latest/#other-libraries
-
-                myNote = realm.createObject(MyNote.class);
-                myNote.setMyNote(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
-
-                realm.commitTransaction();
-                ((TextView) findViewById(R.id.editTextForNote)).setText("");
-                Log.i("realm", realm.where(MyNote.class).findAll().asJSON());
-
-            }
-        });
-
 
     }
 
-    private void showPopupMenu(final RealmResults<MyNote> results1) {
+    private void showPopupMenu() {
         LayoutInflater inflater = LayoutInflater.from(getBaseContext());
         final View addNote = inflater.inflate(R.layout.add_note, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -168,6 +154,24 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_add:
+                showPopupMenu();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public void showSoftKeyboard(View view) {
         if(view.requestFocus()){
             InputMethodManager imm =(InputMethodManager)

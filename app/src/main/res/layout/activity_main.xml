@@ -8,27 +8,6 @@
     tools:context=".MainActivity">
 
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        >
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:inputType="text"
-            android:id="@+id/editTextForNote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonToAddNote"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="add"/>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
     <androidx.recyclerview.widget.RecyclerView
 
         android:scrollbars="vertical"
