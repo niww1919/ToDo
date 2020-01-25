@@ -9,22 +9,23 @@ import io.realm.annotations.Required;
 public class MyNote extends RealmObject {
     @Required
 //    private int id;
-    private RealmList<String> myNoteRealmList;
-    private String nameNote;
+    private String myNote;
+    private String mySubNote;
 
-    public RealmList<String> getMyNoteRealmList() {
-        return myNoteRealmList;
+    public String getMyNote() {
+        return myNote;
     }
 
-    public void setMyNoteRealmList(RealmList<String> myNoteRealmList) {
-        this.myNoteRealmList = myNoteRealmList;
+    public void setMyNote(String myNote) {
+        this.myNote = myNote;
     }
 
-    public String getNameNote() {
-        return nameNote;
+    public String getMySubNote() {
+        return mySubNote;
     }
 
-    public void setNameNote(String nameNote) {
-        this.nameNote = nameNote;
+    public void setMySubNote(String mySubNote) {
+        this.mySubNote = mySubNote;
     }
+
 }

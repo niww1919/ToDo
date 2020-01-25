@@ -27,12 +27,15 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
     Realm realm;
     RecyclerView.LayoutManager layoutManager;
     NoteAdapter noteAdapter;
     List<String> list;
+    MyNote myNote;
+    RealmList<String> realmList;
 
 
     @Override
@@ -62,9 +65,19 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
 
                     Toast.makeText(getBaseContext(),"Ok",Toast.LENGTH_SHORT).show();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            RealmResults<MyNote> realmResults = realm.where(MyNote.class).findAll();//fixme
+                            realmResults.get(viewHolder.getAdapterPosition()).setMyNote("1");
+                            Log.i("realmResults", realmResults.get(viewHolder.getAdapterPosition()).getMyNote() +" "+ viewHolder.getAdapterPosition());
+
+
+                        }
+                    });
 
 
 
@@ -80,24 +93,15 @@ public class MainActivity extends AppCompatActivity {
                 realm.beginTransaction();
                 //fixme RealmList https://realm.io/docs/java/latest/#other-libraries
 
-                MyNote myNote1 = realm.createObject(MyNote.class);
-                RealmList<String> realmList = new RealmList<>();
-                realmList.add(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
-                realmList.add(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
-                realmList.add(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
-                myNote1.setMyNoteRealmList(realmList);
+                myNote = realm.createObject(MyNote.class);
+                myNote.setMyNote(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
 
-                myNote1.setNameNote(((TextView)findViewById(R.id.editTextForNote)).getText().toString());
                 realm.commitTransaction();
                 ((TextView) findViewById(R.id.editTextForNote)).setText("");
                 Log.i("realm", realm.where(MyNote.class).findAll().asJSON());
 
             }
         });
-
-
-
-
 
     }
 }

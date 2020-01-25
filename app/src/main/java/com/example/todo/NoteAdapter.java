@@ -11,17 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.realm.MyNote;
 
+import java.util.List;
 import java.util.zip.Inflater;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
     private Realm realm;
-    private RealmResults<MyNote> result;
+    private List<String> result;
+    private MyNote myNote;
+    private RealmList<MyNote> realmList;
+    private RealmResults<MyNote> realmResults;
 
     public NoteAdapter(Realm realm) {
         this.realm = realm;
+
     }
 
     @NonNull
@@ -35,20 +41,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull NoteAdapter.MyViewHolder holder, int position) {
 
 
-        result = realm.where(MyNote.class).findAll();
+//        result = realm.getSchema().get(
+        realmResults = realm.where(MyNote.class).findAll();
+        Log.i("realmResults", realm.where(MyNote.class).findAll().asJSON());
 
         for (int i = 0; i <= position; i++) {
-
-            holder.tvNote.setText(result.get(i).getNameNote());
-            for (int j = 0; j < result.get(i).getMyNoteRealmList().size(); j++) {
-                holder.tvList.setText(" - " +j +" " + result.get(i).getMyNoteRealmList().get(j));
-
-            }
-//        holder.tvList.setText(" - "+ result.asJSON());
-
-
+            holder.tvNote.setText(" - " + i + " "+ realmResults.get(i).getMyNote());
         }
-//        holder.tvNote.setText("Test");
         Log.i("holder", realm.where(MyNote.class).findAll().asJSON());
 
     }
@@ -56,7 +55,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return (int) realm.where(MyNote.class).count();
+//        if (result == null) {
+//            return 0;
+//        } else {
+//
+//            return result.size();
+//        }
+            return (int) realm.where(MyNote.class).count();
+//            return  myNote.getMyNoteRealmList().size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -67,7 +73,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNote = itemView.findViewById(R.id.tvForItem);
-            tvList = itemView.findViewById(R.id.tvForList);
+//            tvList = itemView.findViewById(R.id.tvForList);
             tvNote.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
