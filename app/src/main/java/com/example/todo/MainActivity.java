@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -138,7 +140,10 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(getBaseContext());
         final View addNote = inflater.inflate(R.layout.add_note, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        addNote.findViewById(R.id.editTextForNoteBySwipe).isFocused();
+        // https://stackoverflow.com/questions/2004344/how-do-i-handle-imeoptions-done-button-click
         builder.setView(addNote);
+//        showSoftKeyboard(addNote);
         builder.setNegativeButton("Cancel", null);
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
@@ -162,6 +167,13 @@ public class MainActivity extends AppCompatActivity {
 
         builder.show();
 
+    }
+    public void showSoftKeyboard(View view) {
+        if(view.requestFocus()){
+            InputMethodManager imm =(InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view,InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
 }
