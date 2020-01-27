@@ -6,33 +6,27 @@ package com.example.todo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.todo.realm.MyNote;
+import com.example.todo.realm.SubNote;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -45,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     NoteAdapter noteAdapter;
     List<String> list;
     MyNote myNote;
-    RealmList<String> realmList;
 
 
     @Override
@@ -104,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 //                            Log.i("realmResults1", realmResults.get(viewHolder.getAdapterPosition()).getMyNoteRealmList().size()+"");
 
 
-                            showPopupMenu();
+                            showPopupMenuAddItemToList(realmResults, viewHolder.getAdapterPosition());
                         }
 //                            Log.i("realmResults", realmResults.get(viewHolder.getAdapterPosition()).getMyNote() +" "+ viewHolder.getAdapterPosition());
 
@@ -122,14 +115,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showPopupMenu() {
+    private void showPopupMenuAddItemToList(final RealmResults<MyNote> realmResults, final int position) {
         LayoutInflater inflater = LayoutInflater.from(getBaseContext());
         final View addNote = inflater.inflate(R.layout.add_note, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //        addNote.findViewById(R.id.editTextForNoteBySwipe).isFocused();
+
         // https://stackoverflow.com/questions/2004344/how-do-i-handle-imeoptions-done-button-click
         builder.setView(addNote);
-//        showSoftKeyboard(addNote);
+        showSoftKeyboard(addNote.findViewById(R.id.editTextForNoteBySwipe));//fixme
+        addNote.findViewById(R.id.editTextForNoteBySwipe).setFocusable(true);
         builder.setNegativeButton("Cancel", null);
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
@@ -137,13 +132,19 @@ public class MainActivity extends AppCompatActivity {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        myNote = realm.createObject(MyNote.class);
-                        myNote.setMyNote(((TextView) addNote.findViewById(R.id.editTextForNoteBySwipe)).getText().toString());
-//                        myNote.setMyNote("Work");
+                        Log.i("position", String.valueOf(position));
+                        SubNote subNote =new SubNote();
+                        subNote.setSubNote(((TextView) addNote.findViewById(R.id.editTextForNoteBySwipe)).getText().toString());
+                        //fixme add subNote to realmlist
+                        realmResults.get(position).getMyNoteRealmList().add(0,subNote);
 
 
-//                        results1.add(((TextView) findViewById(R.layout.add_note)).getText().toString());
-//                        results1.setMyNote(((TextView) findViewById(R.id.editTextForNote)).getText().toString());
+                        Log.i("addSubNote", realmResults.get(position).getMyNoteRealmList().toString());
+
+
+                        Log.i("getrealmList", " " +realmResults.get(position).getMyNoteRealmList().size());
+
+
                     }
                 });
 
@@ -154,6 +155,41 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
 
     }
+
+    private void showPopupMenu() {
+        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
+        final View addNote = inflater.inflate(R.layout.add_note, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        addNote.findViewById(R.id.editTextForNoteBySwipe).isFocused();
+
+        // https://stackoverflow.com/questions/2004344/how-do-i-handle-imeoptions-done-button-click
+        builder.setView(addNote);
+        showSoftKeyboard(addNote.findViewById(R.id.editTextForNoteBySwipe));//fixme
+        addNote.findViewById(R.id.editTextForNoteBySwipe).setFocusable(true);
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        myNote = realm.createObject(MyNote.class);
+                        myNote.setMyNote(((TextView) addNote.findViewById(R.id.editTextForNoteBySwipe)).getText().toString());
+
+                        Log.i("realmList", " " +myNote.getMyNote());
+
+                    }
+                });
+
+                recreate();
+            }
+        });
+
+        builder.show();
+
+    }
+
+
     private void showPopupMenuOnDelete(final RealmResults<MyNote> realmResults, final int position) {
         LayoutInflater inflater = LayoutInflater.from(getBaseContext());
         final View addNote = inflater.inflate(R.layout.delete_note, null);
@@ -172,6 +208,8 @@ public class MainActivity extends AppCompatActivity {
                     public void execute(Realm realm) {
 
                         realmResults.get(position).deleteFromRealm();
+                        realmResults.get(position).getMyNoteRealmList();
+
 
                     }
                 });
@@ -202,9 +240,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showSoftKeyboard(View view) {
+        //https://www.tutorialspoint.com/how-to-show-soft-keyboard-based-on-android-edittext-is-focused
         if(view.requestFocus()){
-            InputMethodManager imm =(InputMethodManager)
-                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(view,InputMethodManager.SHOW_IMPLICIT);
         }
     }

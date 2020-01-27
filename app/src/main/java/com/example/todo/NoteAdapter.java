@@ -40,19 +40,19 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull NoteAdapter.MyViewHolder holder, int position) {
 
-        holder.tvNote.setText("Swipe to right");
-
-//        result = realm.getSchema().get(
         realmResults = realm.where(MyNote.class).findAll();
         Log.i("realmResults", realm.where(MyNote.class).findAll().asJSON());
 
         for (int i = 0; i <= position; i++) {
-            holder.tvNote.setText(" - " + i + " " + realmResults.get(i).getMyNote());
-//            for (int j = 0; j < realmResults.get(i).getMyNoteRealmList().size(); j++) {
-//
-//                holder.tvNote.setText(" - " + j + " " + realmResults.get(i).getMyNoteRealmList().get(j));
-//            }
+                holder.tvNote.setText(i + " " + realmResults.get(i).getMyNote());
+
+            for (int j = 0; j < realmResults.get(i).getMyNoteRealmList().size(); j++) {
+
+                holder.tvNote.setText(" - " + j + " " + realmResults.get(i).getMyNoteRealmList().get(j).getSubNote());
+            }
         }
+
+
         Log.i("holder", realm.where(MyNote.class).findAll().asJSON());
 
     }
@@ -78,6 +78,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNote = itemView.findViewById(R.id.tvForItem);
+            tvList = itemView.findViewById(R.id.tvForList);
 //            tvList = itemView.findViewById(R.id.tvForList);
             tvNote.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
