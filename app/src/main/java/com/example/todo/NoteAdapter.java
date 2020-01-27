@@ -53,18 +53,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
             //fixme how to create new cardview??
             TextView textView = new TextView(context);
-            textView.setTextSize(30);
+            textView.setTextSize(20);
 //                holder.tvNote.setText();
                 textView.setText(i + " " + realmResults.get(i).getMyNote());
-                holder.cardView.addView(textView);
+                holder.ll.addView(textView);
 //                holder.ll.addView(textView);
 
             for (int j = 0; j < realmResults.get(i).getMyNoteRealmList().size(); j++) {
                 TextView textView1 = new TextView(context);
-                textView1.setTextSize(30);
+                textView1.setTextSize(20);
 //                holder.tvNote.setText();
-                textView1.setText(i + " " + realmResults.get(i).getMyNoteRealmList().get(j).getSubNote());
-                holder.cardView.addView(textView1);
+                textView1.setText("- "+ j + " " + realmResults.get(i).getMyNoteRealmList().get(j).getSubNote());
+                holder.ll.addView(textView1);
 //                holder.tvNote.setText(" - " + j + " " + realmResults.get(i).getMyNoteRealmList().get(j).getSubNote());
             }
         }
@@ -83,7 +83,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 //
 //            return result.size();
 //        }
+        Log.i("count", ""+ realm.where(MyNote.class).count());
+
+        //fixme how element i need to return
         return (int) realm.where(MyNote.class).count();
+
 //            return  myNote.getMyNoteRealmList().size();
     }
 
