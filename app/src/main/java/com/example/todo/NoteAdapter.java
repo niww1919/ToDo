@@ -1,5 +1,7 @@
 package com.example.todo;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.realm.MyNote;
@@ -24,9 +28,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     private MyNote myNote;
     private RealmList<MyNote> realmList;
     private RealmResults<MyNote> realmResults;
+    private Context context;
 
-    public NoteAdapter(Realm realm) {
+    public NoteAdapter(Realm realm, Context context) {
         this.realm = realm;
+        this.context = context;
 
     }
 
@@ -44,11 +50,22 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         Log.i("realmResults", realm.where(MyNote.class).findAll().asJSON());
 
         for (int i = 0; i <= position; i++) {
-                holder.tvNote.setText(i + " " + realmResults.get(i).getMyNote());
+
+            //fixme how to create new cardview??
+            TextView textView = new TextView(context);
+            textView.setTextSize(30);
+//                holder.tvNote.setText();
+                textView.setText(i + " " + realmResults.get(i).getMyNote());
+                holder.cardView.addView(textView);
+//                holder.ll.addView(textView);
 
             for (int j = 0; j < realmResults.get(i).getMyNoteRealmList().size(); j++) {
-
-                holder.tvNote.setText(" - " + j + " " + realmResults.get(i).getMyNoteRealmList().get(j).getSubNote());
+                TextView textView1 = new TextView(context);
+                textView1.setTextSize(30);
+//                holder.tvNote.setText();
+                textView1.setText(i + " " + realmResults.get(i).getMyNoteRealmList().get(j).getSubNote());
+                holder.cardView.addView(textView1);
+//                holder.tvNote.setText(" - " + j + " " + realmResults.get(i).getMyNoteRealmList().get(j).getSubNote());
             }
         }
 
@@ -74,20 +91,24 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         TextView tvNote;
         TextView tvList;
         TextView newTV;
+        LinearLayoutCompat ll;
+        CardView cardView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvNote = itemView.findViewById(R.id.tvForItem);
-            tvList = itemView.findViewById(R.id.tvForList);
-//            tvList = itemView.findViewById(R.id.tvForList);
-            tvNote.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    tvNote.setVisibility(View.INVISIBLE);
+            ll = itemView.findViewById(R.id.llOfList);
+            cardView = itemView.findViewById(R.id.cardView);
 
-                    return false;
-                }
-            });
+//            tvNote = new TextView();
+//            tvList = itemView.findViewById(R.id.tvForList);
+//            tvNote.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    tvNote.setVisibility(View.INVISIBLE);
+//
+//                    return false;
+//                }
+//            });
 
         }
 
